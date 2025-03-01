@@ -28,8 +28,6 @@ The following is the directory tree structure for the replication folder with de
 ---
 
 ### PREPARING DATA, TREATMENT EFFECT ESTIMATION, AND ANALYSES:
-
-#### `7_lasso_7_merged`
 - **code**  
   - `requirements.txt`  
     - Files containing packages and versions required for the Python code (.ipynb). The notebooks include code and instructions to install the relevant dependencies.
