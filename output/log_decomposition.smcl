@@ -1,0 +1,443 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\rocha\Documents\sugat\covidtweets\covid_tweets\code\..\output\log_decomposition.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}18 Feb 2024, 01:06:46
+{txt}
+{com}. 
+. forvalues i = 1/7 {c -(}
+{txt}  2{com}. matrix drop _all
+{txt}  3{com}. 
+. oaxaca te_gcs_diff te_valence_intensity_diff te_anger_intensity_diff te_fear_intensity_diff te_sadness_intensity_diff te_joy_intensity_diff te_topic_0_diff te_topic_1_diff te_topic_2_diff te_topic_3_diff if event_num==`i' & learner_num==2, by(muslim) swap detail pooled vce(bootstrap)
+{txt}  4{com}. 
+. matrix tb=r(table)
+{txt}  5{com}. matrix betas=nullmat(betas)\[`i',tb["b",.]]
+{txt}  6{com}. matrix ll=nullmat(ll)\[tb["ll",.]]
+{txt}  7{com}. matrix ul=nullmat(ul)\[tb["ul",.]]
+{txt}  8{com}. 
+. lbsvmat betas, matname name(b)
+{txt}  9{com}. lbsvmat ll, matname name(ll)
+{txt} 10{com}. lbsvmat ul, matname name(ul)
+{txt} 11{com}. ren *, low
+{txt} 12{com}. 
+. preserve
+{txt} 13{com}. keep b_c1- ul_unexplained__cons
+{txt} 14{com}. gen event = `i'
+{txt} 15{com}. drop if b_c1==.
+{txt} 16{com}. append using "$path\output\event_coef.dta"
+{txt} 17{com}. save "$path\output\event_coef.dta", replace
+{txt} 18{com}. restore
+{txt} 19{com}. 
+. drop b_c1- ul_unexplained__cons
+{txt} 20{com}. 
+. {c )-}
+{res}{txt}(running {bf:oaxaca} on estimation sample)
+
+Bootstrap replications ({res}50{txt})
+{hline 4}{c +}{hline 3} 1 {hline 3}{c +}{hline 3} 2 {hline 3}{c +}{hline 3} 3 {hline 3}{c +}{hline 3} 4 {hline 3}{c +}{hline 3} 5 
+..................................................    50
+{res}
+{txt}Blinder-Oaxaca decomposition{col 58}{lalign 13:Number of obs}{col 71} = {res}{ralign 5:4,671}
+{txt}{col 58}{lalign 13:Replications}{col 71} = {res}{ralign 5:50}
+{txt}{col 49}Model{col 67}={col 69}    {res}linear
+{txt}Group 1: muslim = {res}1{txt}{col 49}N of obs 1{col 67}={col 69}{res}       392
+{txt}Group 2: muslim = {res}0{txt}{col 49}N of obs 2{col 67}={col 69}{res}     4,279
+
+{txt}    explained: (X1 - X2) * {bf:b}
+  unexplained: X1 * (b1 - {bf:b}) + X2 * ({bf:b} - b2)
+               with {bf:b} from pooled model (including group dummy)
+
+{res}{txt}{hline 26}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 27}{c |}   Observed{col 39}   Bootstrap{col 67}         Norm{col 80}al-based
+{col 1}              te_gcs_diff{col 27}{c |} coefficient{col 39}  std. err.{col 51}      z{col 59}   P>|z|{col 67}     [95% con{col 80}f. interval]
+{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}overall                   {txt}{c |}
+{space 18}group_1 {c |}{col 27}{res}{space 2}-.2415228{col 39}{space 2} .0092971{col 50}{space 1}  -25.98{col 59}{space 3}0.000{col 67}{space 4}-.2597448{col 80}{space 3}-.2233009
+{txt}{space 18}group_2 {c |}{col 27}{res}{space 2}-.0376973{col 39}{space 2} .0027822{col 50}{space 1}  -13.55{col 59}{space 3}0.000{col 67}{space 4}-.0431502{col 80}{space 3}-.0322444
+{txt}{space 15}difference {c |}{col 27}{res}{space 2}-.2038255{col 39}{space 2} .0097969{col 50}{space 1}  -20.81{col 59}{space 3}0.000{col 67}{space 4}-.2230271{col 80}{space 3} -.184624
+{txt}{space 16}explained {c |}{col 27}{res}{space 2}-.0945694{col 39}{space 2} .0083513{col 50}{space 1}  -11.32{col 59}{space 3}0.000{col 67}{space 4}-.1109377{col 80}{space 3} -.078201
+{txt}{space 14}unexplained {c |}{col 27}{res}{space 2}-.1092561{col 39}{space 2} .0081301{col 50}{space 1}  -13.44{col 59}{space 3}0.000{col 67}{space 4}-.1251909{col 80}{space 3}-.0933214
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}explained                 {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2}-.1657109{col 39}{space 2} .0108218{col 50}{space 1}  -15.31{col 59}{space 3}0.000{col 67}{space 4}-.1869212{col 80}{space 3}-.1445007
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2}-.0180812{col 39}{space 2} .0033367{col 50}{space 1}   -5.42{col 59}{space 3}0.000{col 67}{space 4} -.024621{col 80}{space 3}-.0115415
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2}-.0011243{col 39}{space 2} .0006129{col 50}{space 1}   -1.83{col 59}{space 3}0.067{col 67}{space 4}-.0023255{col 80}{space 3}  .000077
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2} .0339458{col 39}{space 2} .0041575{col 50}{space 1}    8.16{col 59}{space 3}0.000{col 67}{space 4} .0257973{col 80}{space 3} .0420944
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2} .0820292{col 39}{space 2} .0089941{col 50}{space 1}    9.12{col 59}{space 3}0.000{col 67}{space 4} .0644011{col 80}{space 3} .0996574
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2}-.0031514{col 39}{space 2} .0013785{col 50}{space 1}   -2.29{col 59}{space 3}0.022{col 67}{space 4}-.0058531{col 80}{space 3}-.0004496
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2} .0305206{col 39}{space 2} .0045363{col 50}{space 1}    6.73{col 59}{space 3}0.000{col 67}{space 4} .0216297{col 80}{space 3} .0394115
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2}-.0601001{col 39}{space 2} .0045135{col 50}{space 1}  -13.32{col 59}{space 3}0.000{col 67}{space 4}-.0689463{col 80}{space 3}-.0512538
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2} .0071028{col 39}{space 2} .0015192{col 50}{space 1}    4.68{col 59}{space 3}0.000{col 67}{space 4} .0041251{col 80}{space 3} .0100804
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}unexplained               {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2}-.0011385{col 39}{space 2} .0219884{col 50}{space 1}   -0.05{col 59}{space 3}0.959{col 67}{space 4} -.044235{col 80}{space 3}  .041958
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2}-.0001792{col 39}{space 2} .0016432{col 50}{space 1}   -0.11{col 59}{space 3}0.913{col 67}{space 4}-.0033998{col 80}{space 3} .0030415
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2}-.0139143{col 39}{space 2} .0084672{col 50}{space 1}   -1.64{col 59}{space 3}0.100{col 67}{space 4}-.0305098{col 80}{space 3} .0026811
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2} .0007802{col 39}{space 2} .0039403{col 50}{space 1}    0.20{col 59}{space 3}0.843{col 67}{space 4}-.0069427{col 80}{space 3} .0085031
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2} .0199984{col 39}{space 2} .0223464{col 50}{space 1}    0.89{col 59}{space 3}0.371{col 67}{space 4}-.0237998{col 80}{space 3} .0637966
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2}-.0003213{col 39}{space 2} .0010245{col 50}{space 1}   -0.31{col 59}{space 3}0.754{col 67}{space 4}-.0023293{col 80}{space 3} .0016867
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2}-.0001618{col 39}{space 2} .0013068{col 50}{space 1}   -0.12{col 59}{space 3}0.901{col 67}{space 4} -.002723{col 80}{space 3} .0023994
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2} -.005934{col 39}{space 2} .0034313{col 50}{space 1}   -1.73{col 59}{space 3}0.084{col 67}{space 4}-.0126592{col 80}{space 3} .0007912
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2} .0014052{col 39}{space 2} .0011275{col 50}{space 1}    1.25{col 59}{space 3}0.213{col 67}{space 4}-.0008046{col 80}{space 3} .0036151
+{txt}{space 20}_cons {c |}{col 27}{res}{space 2}-.1097909{col 39}{space 2} .0114583{col 50}{space 1}   -9.58{col 59}{space 3}0.000{col 67}{space 4}-.1322488{col 80}{space 3} -.087333
+{txt}{hline 26}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}  (all {it:newnames}=={it:oldnames})
+(95,711 observations deleted)
+{p 0 4 2}
+file {bf}
+..\output\event_coef.dta{rm}
+saved
+{p_end}
+{res}{txt}(running {bf:oaxaca} on estimation sample)
+
+Bootstrap replications ({res}50{txt})
+{hline 4}{c +}{hline 3} 1 {hline 3}{c +}{hline 3} 2 {hline 3}{c +}{hline 3} 3 {hline 3}{c +}{hline 3} 4 {hline 3}{c +}{hline 3} 5 
+..................................................    50
+{res}
+{txt}Blinder-Oaxaca decomposition{col 58}{lalign 13:Number of obs}{col 71} = {res}{ralign 5:6,946}
+{txt}{col 58}{lalign 13:Replications}{col 71} = {res}{ralign 5:50}
+{txt}{col 49}Model{col 67}={col 69}    {res}linear
+{txt}Group 1: muslim = {res}1{txt}{col 49}N of obs 1{col 67}={col 69}{res}       633
+{txt}Group 2: muslim = {res}0{txt}{col 49}N of obs 2{col 67}={col 69}{res}     6,313
+
+{txt}    explained: (X1 - X2) * {bf:b}
+  unexplained: X1 * (b1 - {bf:b}) + X2 * ({bf:b} - b2)
+               with {bf:b} from pooled model (including group dummy)
+
+{res}{txt}{hline 26}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 27}{c |}   Observed{col 39}   Bootstrap{col 67}         Norm{col 80}al-based
+{col 1}              te_gcs_diff{col 27}{c |} coefficient{col 39}  std. err.{col 51}      z{col 59}   P>|z|{col 67}     [95% con{col 80}f. interval]
+{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}overall                   {txt}{c |}
+{space 18}group_1 {c |}{col 27}{res}{space 2} .0439563{col 39}{space 2} .0062829{col 50}{space 1}    7.00{col 59}{space 3}0.000{col 67}{space 4} .0316421{col 80}{space 3} .0562706
+{txt}{space 18}group_2 {c |}{col 27}{res}{space 2}-.1806723{col 39}{space 2} .0018387{col 50}{space 1}  -98.26{col 59}{space 3}0.000{col 67}{space 4} -.184276{col 80}{space 3}-.1770685
+{txt}{space 15}difference {c |}{col 27}{res}{space 2} .2246286{col 39}{space 2} .0061993{col 50}{space 1}   36.23{col 59}{space 3}0.000{col 67}{space 4} .2124782{col 80}{space 3} .2367791
+{txt}{space 16}explained {c |}{col 27}{res}{space 2} .0177808{col 39}{space 2} .0051371{col 50}{space 1}    3.46{col 59}{space 3}0.001{col 67}{space 4} .0077122{col 80}{space 3} .0278494
+{txt}{space 14}unexplained {c |}{col 27}{res}{space 2} .2068478{col 39}{space 2}  .005376{col 50}{space 1}   38.48{col 59}{space 3}0.000{col 67}{space 4} .1963111{col 80}{space 3} .2173845
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}explained                 {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2} .0199122{col 39}{space 2} .0024021{col 50}{space 1}    8.29{col 59}{space 3}0.000{col 67}{space 4} .0152042{col 80}{space 3} .0246202
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2}-.0245299{col 39}{space 2} .0017022{col 50}{space 1}  -14.41{col 59}{space 3}0.000{col 67}{space 4}-.0278662{col 80}{space 3}-.0211935
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2} .0064231{col 39}{space 2} .0011988{col 50}{space 1}    5.36{col 59}{space 3}0.000{col 67}{space 4} .0040734{col 80}{space 3} .0087728
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2}-.0007422{col 39}{space 2} .0004107{col 50}{space 1}   -1.81{col 59}{space 3}0.071{col 67}{space 4}-.0015471{col 80}{space 3} .0000627
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2} .0306835{col 39}{space 2} .0025335{col 50}{space 1}   12.11{col 59}{space 3}0.000{col 67}{space 4} .0257179{col 80}{space 3} .0356492
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2} .0050369{col 39}{space 2}  .002265{col 50}{space 1}    2.22{col 59}{space 3}0.026{col 67}{space 4} .0005975{col 80}{space 3} .0094763
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2}-.0058679{col 39}{space 2} .0011635{col 50}{space 1}   -5.04{col 59}{space 3}0.000{col 67}{space 4}-.0081483{col 80}{space 3}-.0035876
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2}-.0058248{col 39}{space 2} .0007155{col 50}{space 1}   -8.14{col 59}{space 3}0.000{col 67}{space 4}-.0072272{col 80}{space 3}-.0044224
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2}-.0073101{col 39}{space 2} .0017508{col 50}{space 1}   -4.18{col 59}{space 3}0.000{col 67}{space 4}-.0107415{col 80}{space 3}-.0038786
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}unexplained               {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2}-.0008735{col 39}{space 2} .0009227{col 50}{space 1}   -0.95{col 59}{space 3}0.344{col 67}{space 4}-.0026821{col 80}{space 3}  .000935
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2} .0001274{col 39}{space 2} .0004236{col 50}{space 1}    0.30{col 59}{space 3}0.763{col 67}{space 4}-.0007027{col 80}{space 3} .0009576
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2} .0003331{col 39}{space 2} .0006498{col 50}{space 1}    0.51{col 59}{space 3}0.608{col 67}{space 4}-.0009404{col 80}{space 3} .0016066
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2} .0051746{col 39}{space 2} .0033792{col 50}{space 1}    1.53{col 59}{space 3}0.126{col 67}{space 4}-.0014485{col 80}{space 3} .0117978
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2} .0009839{col 39}{space 2} .0021828{col 50}{space 1}    0.45{col 59}{space 3}0.652{col 67}{space 4}-.0032944{col 80}{space 3} .0052621
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2} .0001108{col 39}{space 2} .0008351{col 50}{space 1}    0.13{col 59}{space 3}0.894{col 67}{space 4}-.0015259{col 80}{space 3} .0017475
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2} .0085004{col 39}{space 2} .0087369{col 50}{space 1}    0.97{col 59}{space 3}0.331{col 67}{space 4}-.0086237{col 80}{space 3} .0256244
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2}-.0059442{col 39}{space 2} .0029113{col 50}{space 1}   -2.04{col 59}{space 3}0.041{col 67}{space 4}-.0116503{col 80}{space 3}-.0002382
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2}-.0000581{col 39}{space 2}  .000751{col 50}{space 1}   -0.08{col 59}{space 3}0.938{col 67}{space 4}  -.00153{col 80}{space 3} .0014137
+{txt}{space 20}_cons {c |}{col 27}{res}{space 2} .1984936{col 39}{space 2} .0108337{col 50}{space 1}   18.32{col 59}{space 3}0.000{col 67}{space 4} .1772599{col 80}{space 3} .2197272
+{txt}{hline 26}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}  (all {it:newnames}=={it:oldnames})
+(95,711 observations deleted)
+{p 0 4 2}
+file {bf}
+..\output\event_coef.dta{rm}
+saved
+{p_end}
+{res}{txt}(running {bf:oaxaca} on estimation sample)
+
+Bootstrap replications ({res}50{txt})
+{hline 4}{c +}{hline 3} 1 {hline 3}{c +}{hline 3} 2 {hline 3}{c +}{hline 3} 3 {hline 3}{c +}{hline 3} 4 {hline 3}{c +}{hline 3} 5 
+..................................................    50
+{res}
+{txt}Blinder-Oaxaca decomposition{col 58}{lalign 13:Number of obs}{col 71} = {res}{ralign 5:6,387}
+{txt}{col 58}{lalign 13:Replications}{col 71} = {res}{ralign 5:50}
+{txt}{col 49}Model{col 67}={col 69}    {res}linear
+{txt}Group 1: muslim = {res}1{txt}{col 49}N of obs 1{col 67}={col 69}{res}       502
+{txt}Group 2: muslim = {res}0{txt}{col 49}N of obs 2{col 67}={col 69}{res}     5,885
+
+{txt}    explained: (X1 - X2) * {bf:b}
+  unexplained: X1 * (b1 - {bf:b}) + X2 * ({bf:b} - b2)
+               with {bf:b} from pooled model (including group dummy)
+
+{res}{txt}{hline 26}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 27}{c |}   Observed{col 39}   Bootstrap{col 67}         Norm{col 80}al-based
+{col 1}              te_gcs_diff{col 27}{c |} coefficient{col 39}  std. err.{col 51}      z{col 59}   P>|z|{col 67}     [95% con{col 80}f. interval]
+{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}overall                   {txt}{c |}
+{space 18}group_1 {c |}{col 27}{res}{space 2}-.0986417{col 39}{space 2} .0081166{col 50}{space 1}  -12.15{col 59}{space 3}0.000{col 67}{space 4}-.1145499{col 80}{space 3}-.0827336
+{txt}{space 18}group_2 {c |}{col 27}{res}{space 2}-.0925447{col 39}{space 2} .0020482{col 50}{space 1}  -45.18{col 59}{space 3}0.000{col 67}{space 4} -.096559{col 80}{space 3}-.0885304
+{txt}{space 15}difference {c |}{col 27}{res}{space 2} -.006097{col 39}{space 2} .0079935{col 50}{space 1}   -0.76{col 59}{space 3}0.446{col 67}{space 4}-.0217639{col 80}{space 3} .0095698
+{txt}{space 16}explained {c |}{col 27}{res}{space 2}-.0328628{col 39}{space 2} .0049223{col 50}{space 1}   -6.68{col 59}{space 3}0.000{col 67}{space 4}-.0425103{col 80}{space 3}-.0232153
+{txt}{space 14}unexplained {c |}{col 27}{res}{space 2} .0267658{col 39}{space 2} .0084918{col 50}{space 1}    3.15{col 59}{space 3}0.002{col 67}{space 4} .0101221{col 80}{space 3} .0434094
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}explained                 {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2}-.0120244{col 39}{space 2} .0018625{col 50}{space 1}   -6.46{col 59}{space 3}0.000{col 67}{space 4}-.0156748{col 80}{space 3}-.0083741
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2}-.0006327{col 39}{space 2}  .000528{col 50}{space 1}   -1.20{col 59}{space 3}0.231{col 67}{space 4}-.0016676{col 80}{space 3} .0004022
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2}-.0268374{col 39}{space 2} .0025978{col 50}{space 1}  -10.33{col 59}{space 3}0.000{col 67}{space 4} -.031929{col 80}{space 3}-.0217459
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2}-.0083334{col 39}{space 2} .0025522{col 50}{space 1}   -3.27{col 59}{space 3}0.001{col 67}{space 4}-.0133356{col 80}{space 3}-.0033312
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2}-.0047405{col 39}{space 2}  .001589{col 50}{space 1}   -2.98{col 59}{space 3}0.003{col 67}{space 4}-.0078548{col 80}{space 3}-.0016261
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2} .0090517{col 39}{space 2} .0028601{col 50}{space 1}    3.16{col 59}{space 3}0.002{col 67}{space 4}  .003446{col 80}{space 3} .0146573
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2}-.0085535{col 39}{space 2} .0027726{col 50}{space 1}   -3.08{col 59}{space 3}0.002{col 67}{space 4}-.0139878{col 80}{space 3}-.0031193
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2}  .027703{col 39}{space 2} .0015049{col 50}{space 1}   18.41{col 59}{space 3}0.000{col 67}{space 4} .0247534{col 80}{space 3} .0306527
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2}-.0084956{col 39}{space 2} .0018274{col 50}{space 1}   -4.65{col 59}{space 3}0.000{col 67}{space 4}-.0120773{col 80}{space 3}-.0049138
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}unexplained               {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2} .0009363{col 39}{space 2}  .009054{col 50}{space 1}    0.10{col 59}{space 3}0.918{col 67}{space 4}-.0168093{col 80}{space 3} .0186819
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2} .0120782{col 39}{space 2} .0072969{col 50}{space 1}    1.66{col 59}{space 3}0.098{col 67}{space 4}-.0022234{col 80}{space 3} .0263798
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2} .0164451{col 39}{space 2} .0040839{col 50}{space 1}    4.03{col 59}{space 3}0.000{col 67}{space 4} .0084407{col 80}{space 3} .0244494
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2} .0070315{col 39}{space 2} .0151356{col 50}{space 1}    0.46{col 59}{space 3}0.642{col 67}{space 4}-.0226338{col 80}{space 3} .0366967
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2}-.0227592{col 39}{space 2}  .005598{col 50}{space 1}   -4.07{col 59}{space 3}0.000{col 67}{space 4} -.033731{col 80}{space 3}-.0117874
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2}-.0030152{col 39}{space 2} .0034416{col 50}{space 1}   -0.88{col 59}{space 3}0.381{col 67}{space 4}-.0097607{col 80}{space 3} .0037303
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2} .0121355{col 39}{space 2}  .010316{col 50}{space 1}    1.18{col 59}{space 3}0.239{col 67}{space 4}-.0080834{col 80}{space 3} .0323545
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2}-.0006106{col 39}{space 2} .0035151{col 50}{space 1}   -0.17{col 59}{space 3}0.862{col 67}{space 4}-.0075002{col 80}{space 3} .0062789
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2}-.0192912{col 39}{space 2} .0167527{col 50}{space 1}   -1.15{col 59}{space 3}0.250{col 67}{space 4}-.0521258{col 80}{space 3} .0135435
+{txt}{space 20}_cons {c |}{col 27}{res}{space 2} .0238154{col 39}{space 2} .0155404{col 50}{space 1}    1.53{col 59}{space 3}0.125{col 67}{space 4}-.0066432{col 80}{space 3}  .054274
+{txt}{hline 26}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}  (all {it:newnames}=={it:oldnames})
+(95,711 observations deleted)
+{p 0 4 2}
+file {bf}
+..\output\event_coef.dta{rm}
+saved
+{p_end}
+{res}{txt}(running {bf:oaxaca} on estimation sample)
+
+Bootstrap replications ({res}50{txt})
+{hline 4}{c +}{hline 3} 1 {hline 3}{c +}{hline 3} 2 {hline 3}{c +}{hline 3} 3 {hline 3}{c +}{hline 3} 4 {hline 3}{c +}{hline 3} 5 
+..................................................    50
+{res}
+{txt}Blinder-Oaxaca decomposition{col 58}{lalign 13:Number of obs}{col 71} = {res}{ralign 5:4,622}
+{txt}{col 58}{lalign 13:Replications}{col 71} = {res}{ralign 5:50}
+{txt}{col 49}Model{col 67}={col 69}    {res}linear
+{txt}Group 1: muslim = {res}1{txt}{col 49}N of obs 1{col 67}={col 69}{res}       361
+{txt}Group 2: muslim = {res}0{txt}{col 49}N of obs 2{col 67}={col 69}{res}     4,261
+
+{txt}    explained: (X1 - X2) * {bf:b}
+  unexplained: X1 * (b1 - {bf:b}) + X2 * ({bf:b} - b2)
+               with {bf:b} from pooled model (including group dummy)
+
+{res}{txt}{hline 26}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 27}{c |}   Observed{col 39}   Bootstrap{col 67}         Norm{col 80}al-based
+{col 1}              te_gcs_diff{col 27}{c |} coefficient{col 39}  std. err.{col 51}      z{col 59}   P>|z|{col 67}     [95% con{col 80}f. interval]
+{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}overall                   {txt}{c |}
+{space 18}group_1 {c |}{col 27}{res}{space 2}-.0815989{col 39}{space 2}   .01019{col 50}{space 1}   -8.01{col 59}{space 3}0.000{col 67}{space 4}-.1015709{col 80}{space 3}-.0616268
+{txt}{space 18}group_2 {c |}{col 27}{res}{space 2}-.0474015{col 39}{space 2} .0028602{col 50}{space 1}  -16.57{col 59}{space 3}0.000{col 67}{space 4}-.0530074{col 80}{space 3}-.0417957
+{txt}{space 15}difference {c |}{col 27}{res}{space 2}-.0341973{col 39}{space 2} .0098687{col 50}{space 1}   -3.47{col 59}{space 3}0.001{col 67}{space 4}-.0535397{col 80}{space 3}-.0148549
+{txt}{space 16}explained {c |}{col 27}{res}{space 2}-.0501943{col 39}{space 2} .0084249{col 50}{space 1}   -5.96{col 59}{space 3}0.000{col 67}{space 4}-.0667069{col 80}{space 3}-.0336817
+{txt}{space 14}unexplained {c |}{col 27}{res}{space 2}  .015997{col 39}{space 2} .0098011{col 50}{space 1}    1.63{col 59}{space 3}0.103{col 67}{space 4}-.0032128{col 80}{space 3} .0352068
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}explained                 {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2}-.0115839{col 39}{space 2} .0028663{col 50}{space 1}   -4.04{col 59}{space 3}0.000{col 67}{space 4}-.0172017{col 80}{space 3}-.0059661
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2}-.0359958{col 39}{space 2} .0041781{col 50}{space 1}   -8.62{col 59}{space 3}0.000{col 67}{space 4}-.0441847{col 80}{space 3}-.0278068
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2}-.1003046{col 39}{space 2} .0066729{col 50}{space 1}  -15.03{col 59}{space 3}0.000{col 67}{space 4}-.1133832{col 80}{space 3} -.087226
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2} .0742407{col 39}{space 2} .0058846{col 50}{space 1}   12.62{col 59}{space 3}0.000{col 67}{space 4} .0627071{col 80}{space 3} .0857743
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2}  .051861{col 39}{space 2} .0046966{col 50}{space 1}   11.04{col 59}{space 3}0.000{col 67}{space 4} .0426559{col 80}{space 3} .0610662
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2} .0095551{col 39}{space 2} .0021072{col 50}{space 1}    4.53{col 59}{space 3}0.000{col 67}{space 4} .0054251{col 80}{space 3} .0136851
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2}-.0284817{col 39}{space 2} .0035758{col 50}{space 1}   -7.97{col 59}{space 3}0.000{col 67}{space 4}-.0354901{col 80}{space 3}-.0214733
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2}-.0091913{col 39}{space 2} .0016192{col 50}{space 1}   -5.68{col 59}{space 3}0.000{col 67}{space 4}-.0123649{col 80}{space 3}-.0060177
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2}-.0002938{col 39}{space 2} .0009882{col 50}{space 1}   -0.30{col 59}{space 3}0.766{col 67}{space 4}-.0022307{col 80}{space 3}  .001643
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}unexplained               {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2}-.0036151{col 39}{space 2} .0087907{col 50}{space 1}   -0.41{col 59}{space 3}0.681{col 67}{space 4}-.0208445{col 80}{space 3} .0136144
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2}-.0145735{col 39}{space 2} .0193985{col 50}{space 1}   -0.75{col 59}{space 3}0.452{col 67}{space 4}-.0525939{col 80}{space 3} .0234469
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2} .0051456{col 39}{space 2} .0048272{col 50}{space 1}    1.07{col 59}{space 3}0.286{col 67}{space 4}-.0043155{col 80}{space 3} .0146067
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2} .0140172{col 39}{space 2} .0132111{col 50}{space 1}    1.06{col 59}{space 3}0.289{col 67}{space 4}-.0118761{col 80}{space 3} .0399106
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2}-.0008997{col 39}{space 2} .0015123{col 50}{space 1}   -0.59{col 59}{space 3}0.552{col 67}{space 4}-.0038636{col 80}{space 3} .0020643
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2} .0066102{col 39}{space 2} .0036882{col 50}{space 1}    1.79{col 59}{space 3}0.073{col 67}{space 4}-.0006185{col 80}{space 3} .0138389
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2}-.0074388{col 39}{space 2} .0063905{col 50}{space 1}   -1.16{col 59}{space 3}0.244{col 67}{space 4} -.019964{col 80}{space 3} .0050863
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2} .0028378{col 39}{space 2} .0202062{col 50}{space 1}    0.14{col 59}{space 3}0.888{col 67}{space 4}-.0367656{col 80}{space 3} .0424413
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2} .0182802{col 39}{space 2} .0068276{col 50}{space 1}    2.68{col 59}{space 3}0.007{col 67}{space 4} .0048983{col 80}{space 3}  .031662
+{txt}{space 20}_cons {c |}{col 27}{res}{space 2}-.0043669{col 39}{space 2} .0343123{col 50}{space 1}   -0.13{col 59}{space 3}0.899{col 67}{space 4}-.0716178{col 80}{space 3} .0628839
+{txt}{hline 26}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}  (all {it:newnames}=={it:oldnames})
+(95,711 observations deleted)
+{p 0 4 2}
+file {bf}
+..\output\event_coef.dta{rm}
+saved
+{p_end}
+{res}{txt}(running {bf:oaxaca} on estimation sample)
+
+Bootstrap replications ({res}50{txt})
+{hline 4}{c +}{hline 3} 1 {hline 3}{c +}{hline 3} 2 {hline 3}{c +}{hline 3} 3 {hline 3}{c +}{hline 3} 4 {hline 3}{c +}{hline 3} 5 
+..................................................    50
+{res}
+{txt}Blinder-Oaxaca decomposition{col 58}{lalign 13:Number of obs}{col 71} = {res}{ralign 5:3,497}
+{txt}{col 58}{lalign 13:Replications}{col 71} = {res}{ralign 5:50}
+{txt}{col 49}Model{col 67}={col 69}    {res}linear
+{txt}Group 1: muslim = {res}1{txt}{col 49}N of obs 1{col 67}={col 69}{res}       293
+{txt}Group 2: muslim = {res}0{txt}{col 49}N of obs 2{col 67}={col 69}{res}     3,204
+
+{txt}    explained: (X1 - X2) * {bf:b}
+  unexplained: X1 * (b1 - {bf:b}) + X2 * ({bf:b} - b2)
+               with {bf:b} from pooled model (including group dummy)
+
+{res}{txt}{hline 26}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 27}{c |}   Observed{col 39}   Bootstrap{col 67}         Norm{col 80}al-based
+{col 1}              te_gcs_diff{col 27}{c |} coefficient{col 39}  std. err.{col 51}      z{col 59}   P>|z|{col 67}     [95% con{col 80}f. interval]
+{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}overall                   {txt}{c |}
+{space 18}group_1 {c |}{col 27}{res}{space 2}-.0259629{col 39}{space 2} .0111755{col 50}{space 1}   -2.32{col 59}{space 3}0.020{col 67}{space 4}-.0478666{col 80}{space 3}-.0040593
+{txt}{space 18}group_2 {c |}{col 27}{res}{space 2}-.0555391{col 39}{space 2} .0026795{col 50}{space 1}  -20.73{col 59}{space 3}0.000{col 67}{space 4}-.0607908{col 80}{space 3}-.0502875
+{txt}{space 15}difference {c |}{col 27}{res}{space 2} .0295762{col 39}{space 2} .0114728{col 50}{space 1}    2.58{col 59}{space 3}0.010{col 67}{space 4}   .00709{col 80}{space 3} .0520624
+{txt}{space 16}explained {c |}{col 27}{res}{space 2} .0250427{col 39}{space 2} .0075461{col 50}{space 1}    3.32{col 59}{space 3}0.001{col 67}{space 4} .0102527{col 80}{space 3} .0398328
+{txt}{space 14}unexplained {c |}{col 27}{res}{space 2} .0045334{col 39}{space 2} .0098166{col 50}{space 1}    0.46{col 59}{space 3}0.644{col 67}{space 4}-.0147068{col 80}{space 3} .0237736
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}explained                 {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2} .0025772{col 39}{space 2} .0020237{col 50}{space 1}    1.27{col 59}{space 3}0.203{col 67}{space 4}-.0013892{col 80}{space 3} .0065437
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2}-.0026952{col 39}{space 2}  .001515{col 50}{space 1}   -1.78{col 59}{space 3}0.075{col 67}{space 4}-.0056645{col 80}{space 3} .0002742
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2} -.000096{col 39}{space 2} .0010498{col 50}{space 1}   -0.09{col 59}{space 3}0.927{col 67}{space 4}-.0021536{col 80}{space 3} .0019615
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2} .0049979{col 39}{space 2} .0070954{col 50}{space 1}    0.70{col 59}{space 3}0.481{col 67}{space 4}-.0089088{col 80}{space 3} .0189045
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2}-.0007877{col 39}{space 2} .0012798{col 50}{space 1}   -0.62{col 59}{space 3}0.538{col 67}{space 4} -.003296{col 80}{space 3} .0017206
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2}-.0001123{col 39}{space 2}  .000252{col 50}{space 1}   -0.45{col 59}{space 3}0.656{col 67}{space 4}-.0006063{col 80}{space 3} .0003817
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2} .0324819{col 39}{space 2} .0050807{col 50}{space 1}    6.39{col 59}{space 3}0.000{col 67}{space 4} .0225238{col 80}{space 3} .0424399
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2}-.0330246{col 39}{space 2} .0044323{col 50}{space 1}   -7.45{col 59}{space 3}0.000{col 67}{space 4}-.0417117{col 80}{space 3}-.0243375
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2} .0217016{col 39}{space 2} .0029658{col 50}{space 1}    7.32{col 59}{space 3}0.000{col 67}{space 4} .0158887{col 80}{space 3} .0275145
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}unexplained               {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2}-.0075399{col 39}{space 2} .0050018{col 50}{space 1}   -1.51{col 59}{space 3}0.132{col 67}{space 4}-.0173433{col 80}{space 3} .0022634
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2} .0000481{col 39}{space 2} .0021803{col 50}{space 1}    0.02{col 59}{space 3}0.982{col 67}{space 4}-.0042253{col 80}{space 3} .0043214
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2}-.0449068{col 39}{space 2} .0177497{col 50}{space 1}   -2.53{col 59}{space 3}0.011{col 67}{space 4}-.0796956{col 80}{space 3} -.010118
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2} .0306525{col 39}{space 2} .0090704{col 50}{space 1}    3.38{col 59}{space 3}0.001{col 67}{space 4} .0128749{col 80}{space 3} .0484301
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2} .0067459{col 39}{space 2} .0063589{col 50}{space 1}    1.06{col 59}{space 3}0.289{col 67}{space 4}-.0057174{col 80}{space 3} .0192092
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2} .0412212{col 39}{space 2} .0116309{col 50}{space 1}    3.54{col 59}{space 3}0.000{col 67}{space 4}  .018425{col 80}{space 3} .0640173
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2}-.0074017{col 39}{space 2} .0106287{col 50}{space 1}   -0.70{col 59}{space 3}0.486{col 67}{space 4}-.0282335{col 80}{space 3} .0134301
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2}  .001129{col 39}{space 2} .0020411{col 50}{space 1}    0.55{col 59}{space 3}0.580{col 67}{space 4}-.0028715{col 80}{space 3} .0051296
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2}-.0202107{col 39}{space 2} .0072933{col 50}{space 1}   -2.77{col 59}{space 3}0.006{col 67}{space 4}-.0345054{col 80}{space 3}-.0059161
+{txt}{space 20}_cons {c |}{col 27}{res}{space 2}  .004796{col 39}{space 2} .0188623{col 50}{space 1}    0.25{col 59}{space 3}0.799{col 67}{space 4}-.0321734{col 80}{space 3} .0417655
+{txt}{hline 26}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}  (all {it:newnames}=={it:oldnames})
+(95,711 observations deleted)
+{p 0 4 2}
+file {bf}
+..\output\event_coef.dta{rm}
+saved
+{p_end}
+{res}{txt}(running {bf:oaxaca} on estimation sample)
+
+Bootstrap replications ({res}50{txt})
+{hline 4}{c +}{hline 3} 1 {hline 3}{c +}{hline 3} 2 {hline 3}{c +}{hline 3} 3 {hline 3}{c +}{hline 3} 4 {hline 3}{c +}{hline 3} 5 
+..................................................    50
+{res}
+{txt}Blinder-Oaxaca decomposition{col 58}{lalign 13:Number of obs}{col 71} = {res}{ralign 5:3,792}
+{txt}{col 58}{lalign 13:Replications}{col 71} = {res}{ralign 5:50}
+{txt}{col 49}Model{col 67}={col 69}    {res}linear
+{txt}Group 1: muslim = {res}1{txt}{col 49}N of obs 1{col 67}={col 69}{res}       306
+{txt}Group 2: muslim = {res}0{txt}{col 49}N of obs 2{col 67}={col 69}{res}     3,486
+
+{txt}    explained: (X1 - X2) * {bf:b}
+  unexplained: X1 * (b1 - {bf:b}) + X2 * ({bf:b} - b2)
+               with {bf:b} from pooled model (including group dummy)
+
+{res}{txt}{hline 26}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 27}{c |}   Observed{col 39}   Bootstrap{col 67}         Norm{col 80}al-based
+{col 1}              te_gcs_diff{col 27}{c |} coefficient{col 39}  std. err.{col 51}      z{col 59}   P>|z|{col 67}     [95% con{col 80}f. interval]
+{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}overall                   {txt}{c |}
+{space 18}group_1 {c |}{col 27}{res}{space 2} -.010034{col 39}{space 2} .0120482{col 50}{space 1}   -0.83{col 59}{space 3}0.405{col 67}{space 4}-.0336482{col 80}{space 3} .0135801
+{txt}{space 18}group_2 {c |}{col 27}{res}{space 2} .0563458{col 39}{space 2} .0042595{col 50}{space 1}   13.23{col 59}{space 3}0.000{col 67}{space 4} .0479973{col 80}{space 3} .0646943
+{txt}{space 15}difference {c |}{col 27}{res}{space 2}-.0663799{col 39}{space 2}   .01327{col 50}{space 1}   -5.00{col 59}{space 3}0.000{col 67}{space 4}-.0923885{col 80}{space 3}-.0403712
+{txt}{space 16}explained {c |}{col 27}{res}{space 2} .0067532{col 39}{space 2} .0089667{col 50}{space 1}    0.75{col 59}{space 3}0.451{col 67}{space 4}-.0108211{col 80}{space 3} .0243276
+{txt}{space 14}unexplained {c |}{col 27}{res}{space 2}-.0731331{col 39}{space 2} .0150356{col 50}{space 1}   -4.86{col 59}{space 3}0.000{col 67}{space 4}-.1026024{col 80}{space 3}-.0436638
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}explained                 {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2} .0125496{col 39}{space 2} .0042984{col 50}{space 1}    2.92{col 59}{space 3}0.004{col 67}{space 4} .0041248{col 80}{space 3} .0209744
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2}-.0076178{col 39}{space 2}  .002832{col 50}{space 1}   -2.69{col 59}{space 3}0.007{col 67}{space 4}-.0131685{col 80}{space 3}-.0020672
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2} .0078632{col 39}{space 2} .0024459{col 50}{space 1}    3.21{col 59}{space 3}0.001{col 67}{space 4} .0030693{col 80}{space 3} .0126571
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2}-.0174657{col 39}{space 2} .0038891{col 50}{space 1}   -4.49{col 59}{space 3}0.000{col 67}{space 4}-.0250882{col 80}{space 3}-.0098432
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2}-.0124255{col 39}{space 2} .0028678{col 50}{space 1}   -4.33{col 59}{space 3}0.000{col 67}{space 4}-.0180462{col 80}{space 3}-.0068048
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2} .0004629{col 39}{space 2} .0031431{col 50}{space 1}    0.15{col 59}{space 3}0.883{col 67}{space 4}-.0056973{col 80}{space 3} .0066232
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2} .0098419{col 39}{space 2} .0031059{col 50}{space 1}    3.17{col 59}{space 3}0.002{col 67}{space 4} .0037544{col 80}{space 3} .0159295
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2}-.0075217{col 39}{space 2} .0016708{col 50}{space 1}   -4.50{col 59}{space 3}0.000{col 67}{space 4}-.0107964{col 80}{space 3}-.0042469
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2} .0210662{col 39}{space 2} .0034091{col 50}{space 1}    6.18{col 59}{space 3}0.000{col 67}{space 4} .0143844{col 80}{space 3} .0277479
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}unexplained               {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2}-.0101167{col 39}{space 2}  .020671{col 50}{space 1}   -0.49{col 59}{space 3}0.625{col 67}{space 4}-.0506311{col 80}{space 3} .0303977
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2} .0093072{col 39}{space 2} .0134979{col 50}{space 1}    0.69{col 59}{space 3}0.490{col 67}{space 4}-.0171482{col 80}{space 3} .0357626
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2}-.0045384{col 39}{space 2} .0093415{col 50}{space 1}   -0.49{col 59}{space 3}0.627{col 67}{space 4}-.0228474{col 80}{space 3} .0137706
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2}  .020207{col 39}{space 2} .0135533{col 50}{space 1}    1.49{col 59}{space 3}0.136{col 67}{space 4}-.0063569{col 80}{space 3} .0467709
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2}-.0743146{col 39}{space 2} .0234037{col 50}{space 1}   -3.18{col 59}{space 3}0.001{col 67}{space 4} -.120185{col 80}{space 3}-.0284443
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2} .0184698{col 39}{space 2} .0113223{col 50}{space 1}    1.63{col 59}{space 3}0.103{col 67}{space 4}-.0037216{col 80}{space 3} .0406612
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2} .0269013{col 39}{space 2}  .005514{col 50}{space 1}    4.88{col 59}{space 3}0.000{col 67}{space 4}  .016094{col 80}{space 3} .0377086
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2}-.0014967{col 39}{space 2} .0032424{col 50}{space 1}   -0.46{col 59}{space 3}0.644{col 67}{space 4}-.0078517{col 80}{space 3} .0048583
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2}-.0125285{col 39}{space 2} .0064048{col 50}{space 1}   -1.96{col 59}{space 3}0.050{col 67}{space 4}-.0250817{col 80}{space 3} .0000247
+{txt}{space 20}_cons {c |}{col 27}{res}{space 2}-.0450235{col 39}{space 2} .0287964{col 50}{space 1}   -1.56{col 59}{space 3}0.118{col 67}{space 4}-.1014634{col 80}{space 3} .0114164
+{txt}{hline 26}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}  (all {it:newnames}=={it:oldnames})
+(95,711 observations deleted)
+{p 0 4 2}
+file {bf}
+..\output\event_coef.dta{rm}
+saved
+{p_end}
+{res}{txt}(running {bf:oaxaca} on estimation sample)
+
+Bootstrap replications ({res}50{txt})
+{hline 4}{c +}{hline 3} 1 {hline 3}{c +}{hline 3} 2 {hline 3}{c +}{hline 3} 3 {hline 3}{c +}{hline 3} 4 {hline 3}{c +}{hline 3} 5 
+..................................................    50
+{res}
+{txt}Blinder-Oaxaca decomposition{col 58}{lalign 13:Number of obs}{col 71} = {res}{ralign 5:1,989}
+{txt}{col 58}{lalign 13:Replications}{col 71} = {res}{ralign 5:50}
+{txt}{col 49}Model{col 67}={col 69}    {res}linear
+{txt}Group 1: muslim = {res}1{txt}{col 49}N of obs 1{col 67}={col 69}{res}       130
+{txt}Group 2: muslim = {res}0{txt}{col 49}N of obs 2{col 67}={col 69}{res}     1,859
+
+{txt}    explained: (X1 - X2) * {bf:b}
+  unexplained: X1 * (b1 - {bf:b}) + X2 * ({bf:b} - b2)
+               with {bf:b} from pooled model (including group dummy)
+
+{res}{txt}{hline 26}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 27}{c |}   Observed{col 39}   Bootstrap{col 67}         Norm{col 80}al-based
+{col 1}              te_gcs_diff{col 27}{c |} coefficient{col 39}  std. err.{col 51}      z{col 59}   P>|z|{col 67}     [95% con{col 80}f. interval]
+{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}overall                   {txt}{c |}
+{space 18}group_1 {c |}{col 27}{res}{space 2}-.1798834{col 39}{space 2} .0273333{col 50}{space 1}   -6.58{col 59}{space 3}0.000{col 67}{space 4}-.2334558{col 80}{space 3}-.1263111
+{txt}{space 18}group_2 {c |}{col 27}{res}{space 2}-.0798009{col 39}{space 2} .0049592{col 50}{space 1}  -16.09{col 59}{space 3}0.000{col 67}{space 4}-.0895208{col 80}{space 3} -.070081
+{txt}{space 15}difference {c |}{col 27}{res}{space 2}-.1000826{col 39}{space 2} .0291739{col 50}{space 1}   -3.43{col 59}{space 3}0.001{col 67}{space 4}-.1572623{col 80}{space 3}-.0429028
+{txt}{space 16}explained {c |}{col 27}{res}{space 2}-.0657096{col 39}{space 2} .0235923{col 50}{space 1}   -2.79{col 59}{space 3}0.005{col 67}{space 4}-.1119498{col 80}{space 3}-.0194695
+{txt}{space 14}unexplained {c |}{col 27}{res}{space 2}-.0343729{col 39}{space 2} .0237159{col 50}{space 1}   -1.45{col 59}{space 3}0.147{col 67}{space 4}-.0808553{col 80}{space 3} .0121094
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}explained                 {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2}-.0009861{col 39}{space 2} .0057082{col 50}{space 1}   -0.17{col 59}{space 3}0.863{col 67}{space 4} -.012174{col 80}{space 3} .0102018
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2}-.0004134{col 39}{space 2} .0013607{col 50}{space 1}   -0.30{col 59}{space 3}0.761{col 67}{space 4}-.0030803{col 80}{space 3} .0022534
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2}-.0113125{col 39}{space 2}  .004832{col 50}{space 1}   -2.34{col 59}{space 3}0.019{col 67}{space 4} -.020783{col 80}{space 3} -.001842
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2}-.0065202{col 39}{space 2} .0066351{col 50}{space 1}   -0.98{col 59}{space 3}0.326{col 67}{space 4}-.0195248{col 80}{space 3} .0064844
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2}-.0094272{col 39}{space 2} .0055636{col 50}{space 1}   -1.69{col 59}{space 3}0.090{col 67}{space 4}-.0203316{col 80}{space 3} .0014772
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2} .0658764{col 39}{space 2} .0208064{col 50}{space 1}    3.17{col 59}{space 3}0.002{col 67}{space 4} .0250965{col 80}{space 3} .1066562
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2}-.0663553{col 39}{space 2} .0176708{col 50}{space 1}   -3.76{col 59}{space 3}0.000{col 67}{space 4}-.1009894{col 80}{space 3}-.0317212
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2}-.0119605{col 39}{space 2} .0175071{col 50}{space 1}   -0.68{col 59}{space 3}0.494{col 67}{space 4}-.0462739{col 80}{space 3} .0223528
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2}-.0246107{col 39}{space 2} .0141085{col 50}{space 1}   -1.74{col 59}{space 3}0.081{col 67}{space 4}-.0522629{col 80}{space 3} .0030415
+{txt}{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}unexplained               {txt}{c |}
+te_valence_intensity_diff {c |}{col 27}{res}{space 2}-.0082176{col 39}{space 2} .0085956{col 50}{space 1}   -0.96{col 59}{space 3}0.339{col 67}{space 4}-.0250647{col 80}{space 3} .0086294
+{txt}{space 2}te_anger_intensity_diff {c |}{col 27}{res}{space 2}-.0137769{col 39}{space 2} .0266222{col 50}{space 1}   -0.52{col 59}{space 3}0.605{col 67}{space 4}-.0659554{col 80}{space 3} .0384015
+{txt}{space 3}te_fear_intensity_diff {c |}{col 27}{res}{space 2} .0008555{col 39}{space 2} .0023225{col 50}{space 1}    0.37{col 59}{space 3}0.713{col 67}{space 4}-.0036965{col 80}{space 3} .0054074
+{txt}te_sadness_intensity_diff {c |}{col 27}{res}{space 2} .0297789{col 39}{space 2} .0248127{col 50}{space 1}    1.20{col 59}{space 3}0.230{col 67}{space 4} -.018853{col 80}{space 3} .0784109
+{txt}{space 4}te_joy_intensity_diff {c |}{col 27}{res}{space 2}-.0107966{col 39}{space 2} .0165252{col 50}{space 1}   -0.65{col 59}{space 3}0.514{col 67}{space 4}-.0431854{col 80}{space 3} .0215923
+{txt}{space 10}te_topic_0_diff {c |}{col 27}{res}{space 2}-.0038164{col 39}{space 2} .0093906{col 50}{space 1}   -0.41{col 59}{space 3}0.684{col 67}{space 4}-.0222216{col 80}{space 3} .0145888
+{txt}{space 10}te_topic_1_diff {c |}{col 27}{res}{space 2} .1079908{col 39}{space 2} .0395344{col 50}{space 1}    2.73{col 59}{space 3}0.006{col 67}{space 4} .0305048{col 80}{space 3} .1854767
+{txt}{space 10}te_topic_2_diff {c |}{col 27}{res}{space 2}-.0928054{col 39}{space 2} .0664688{col 50}{space 1}   -1.40{col 59}{space 3}0.163{col 67}{space 4}-.2230819{col 80}{space 3} .0374711
+{txt}{space 10}te_topic_3_diff {c |}{col 27}{res}{space 2}-.0066287{col 39}{space 2} .0061163{col 50}{space 1}   -1.08{col 59}{space 3}0.278{col 67}{space 4}-.0186164{col 80}{space 3} .0053589
+{txt}{space 20}_cons {c |}{col 27}{res}{space 2}-.0369565{col 39}{space 2} .0673555{col 50}{space 1}   -0.55{col 59}{space 3}0.583{col 67}{space 4}-.1689709{col 80}{space 3} .0950579
+{txt}{hline 26}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}  (all {it:newnames}=={it:oldnames})
+(95,711 observations deleted)
+{p 0 4 2}
+file {bf}
+..\output\event_coef.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\rocha\Documents\sugat\covidtweets\covid_tweets\code\..\output\log_decomposition.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}18 Feb 2024, 01:07:41
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}
